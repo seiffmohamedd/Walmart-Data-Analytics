@@ -1,4 +1,4 @@
-###create virtual Environment
-#python -m venv 'name of env'
-#'name of env'\Scripts\activate
-#pip install -r 'name of txt file that contain requirments'
+# create virtual Environment
+## python -m venv 'name of env'
+## 'name of env'\Scripts\activate
+## pip install -r 'name of txt file that contain requirments'
