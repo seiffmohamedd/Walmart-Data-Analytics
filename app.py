@@ -10,10 +10,16 @@ host = "localhost"
 port = 3306 
 database = "seif"
 
+mysql_user = 'root'
+mysql_password = '123'
+mysql_host = '127.0.0.1'
+mysql_database = 'mart'
+
 def extract():
     try:
-        connection_url = f"mysql+pymysql://{uid}:{pwd}@{host}:{port}/{database}"
-        src_engine = create_engine(connection_url)
+        # connection_url = f"mysql+pymysql://{uid}:{pwd}@{host}:{port}/{database}"
+        # src_engine = create_engine(connection_url)
+        src_engine = create_engine(f'mysql+mysqlconnector://{mysql_user}:{mysql_password}@{mysql_host}/{mysql_database}')  ###otifi
 
         try:
             src_conn = src_engine.connect()
@@ -24,15 +30,15 @@ def extract():
         query = """
         SELECT TABLE_NAME AS table_name
         FROM INFORMATION_SCHEMA.TABLES
-        WHERE TABLE_SCHEMA = 'seif'
-        AND TABLE_NAME IN ('student')
+        WHERE TABLE_SCHEMA = 'mart'
+        AND TABLE_NAME IN ('stores')
         """
         src_tables = pd.read_sql_query(query, src_conn).to_dict().get('table_name', {})
 
         for id, table_name in src_tables.items():
             df = pd.read_sql_query(f"SELECT * FROM {table_name}", src_conn)
             print(f"Data from {table_name}:\n", df)
-            load(df, table_name)
+            # load(df, table_name)
 
     except Exception as e:
         print(f"Data extract error: {str(e)}")
