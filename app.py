@@ -1,20 +1,18 @@
 #import needed libraries
-
-
 from sqlalchemy import create_engine
 import pandas as pd
 
-# pwd = 'seif'  
-# uid = 'root'    
-# host = "localhost"
-# port = 3306 
-# database = "seif"
-
-pwd = '123'  
+pwd = 'seif'  
 uid = 'root'    
 host = "localhost"
 port = 3306 
-database = "mart"
+database = "iti"
+
+# pwd = '123'  
+# uid = 'root'    
+# host = "localhost"
+# port = 3306 
+# database = "mart"
 
 def load(df, tbl):
     try:
@@ -22,25 +20,28 @@ def load(df, tbl):
         connection_url = f'postgresql://{uid2}:{pwd2}@{host2}:{port2}/{database2}'
         engine = create_engine(connection_url)
         try:
-            src_conn = engine.connect()
-            print("Connection postgres successful")
-            table_name = 'stores'
-            df.to_sql(name=table_name, con=src_conn, if_exists="append", index=False)
+            src_connpos = engine.connect()
+            print("na henaaaa felll dest")
+            print(f"Data from {df}:\n")
+            
+            df.to_sql(name=tbl, con=src_connpos, if_exists="append", index=False)
             print('done')
-            df_r = pd.read_sql_query(f"SELECT * FROM {table_name}", src_conn)
-            print(f"Data from {table_name}:\n", df_r)
+            df_r = pd.read_sql_query(f"SELECT * FROM {tbl}", src_connpos)
+            print(f"Data from {tbl}:\n", df_r)
 
         except Exception as e:
             raise Exception(f"Connection failed: {str(e)}")
 
-        # print(f'importing rows {rows_imported} to {rows_imported + len(df)}... for table {tbl}')
-        # df.to_sql(f'stg_{tbl}', engine, if_exists='replace', index=False, chunksize=100000)
-        # rows_imported += len(df)my
-        # print("Data imported successful")
-        # print('done')
+        
     except Exception as e:
         print("Data load error: " + str(e))
 
+
+def transform(df, table_name):
+    
+    if table_name == "salesFact":
+        df['salesdate'] = pd.Timestamp.today().strftime('%Y-%m-%d')
+    return df
 def extract():
     try:
         connection_url = f"mysql+pymysql://{uid}:{pwd}@{host}:{port}/{database}"
@@ -51,19 +52,24 @@ def extract():
             print("Connection successful")
         except Exception as e:
             raise Exception(f"Connection failed: {str(e)}")
+        
+        customerdf= pd.read_sql_query("select customerID , customerName from customer ",src_conn)
 
-        query = """
-        SELECT TABLE_NAME AS table_name
-        FROM INFORMATION_SCHEMA.TABLES
-        WHERE TABLE_SCHEMA = 'mart'
-        AND TABLE_NAME IN ('stores')
-        """
-        src_tables = pd.read_sql_query(query, src_conn).to_dict().get('table_name', {})
+        storesdf = pd.read_sql_query("select storeID , storeName from stores ",src_conn)
+        
+        salesdf = pd.read_sql_query("select customerID , storeID , qty from sales", src_conn)
+        
+        # print(f"Data from {customerdf}:\n")
+        # print(f"Data from {storesdf}:\n")
+        # print(f"Data from {salesdf}:\n")
 
-        for id, table_name in src_tables.items():
-            df = pd.read_sql_query(f"SELECT * FROM {table_name}", src_conn)
-            print(f"Data from {table_name}:\n", df)
-            load(df, table_name)
+
+
+        transform(salesdf,"salesFact")
+        load(customerdf,"custDim")
+        load(storesdf,"storesDim")
+        load(salesdf,"salesFact")
+    
 
     except Exception as e:
         print(f"Data extract error: {str(e)}")
@@ -72,12 +78,17 @@ def extract():
             src_conn.close()
             print("Connection closed")
 
-uid2="otifi"
-pwd2="123"
+# uid2="otifi"
+# pwd2="123"
+# host2 = "localhost"
+# port2 = 5432  
+# database2 = "porj"
+
+uid2="etl"
+pwd2="admin"
 host2 = "localhost"
 port2 = 5432  
-database2 = "porj"
-
+database2 = "iti"
 
 
 try:
