@@ -8,40 +8,26 @@ host = "localhost"
 port = 3306 
 database = "iti"
 
+uid2="etl"
+pwd2="admin"
+host2 = "localhost"
+port2 = 5432  
+database2 = "iti"
+
+
 # pwd = '123'  
 # uid = 'root'    
 # host = "localhost"
 # port = 3306 
 # database = "mart"
 
-def load(df, tbl):
-    try:
-        # rows_imported = 0
-        connection_url = f'postgresql://{uid2}:{pwd2}@{host2}:{port2}/{database2}'
-        engine = create_engine(connection_url)
-        try:
-            src_connpos = engine.connect()
-            print("na henaaaa felll dest")
-            print(f"Data from {df}:\n")
-            
-            df.to_sql(name=tbl, con=src_connpos, if_exists="append", index=False)
-            print('done')
-            df_r = pd.read_sql_query(f"SELECT * FROM {tbl}", src_connpos)
-            print(f"Data from {tbl}:\n", df_r)
 
-        except Exception as e:
-            raise Exception(f"Connection failed: {str(e)}")
+# uid2="otifi"
+# pwd2="123"
+# host2 = "localhost"
+# port2 = 5432  
+# database2 = "porj"
 
-        
-    except Exception as e:
-        print("Data load error: " + str(e))
-
-
-def transform(df, table_name):
-    
-    if table_name == "salesFact":
-        df['salesdate'] = pd.Timestamp.today().strftime('%Y-%m-%d')
-    return df
 def extract():
     try:
         connection_url = f"mysql+pymysql://{uid}:{pwd}@{host}:{port}/{database}"
@@ -78,17 +64,33 @@ def extract():
             src_conn.close()
             print("Connection closed")
 
-# uid2="otifi"
-# pwd2="123"
-# host2 = "localhost"
-# port2 = 5432  
-# database2 = "porj"
+def transform(df, table_name):
+    
+    if table_name == "salesFact":
+        df['salesdate'] = pd.Timestamp.today().strftime('%Y-%m-%d')
+    return df
 
-uid2="etl"
-pwd2="admin"
-host2 = "localhost"
-port2 = 5432  
-database2 = "iti"
+
+def load(df, tbl):
+    try:
+        connection_url = f'postgresql://{uid2}:{pwd2}@{host2}:{port2}/{database2}'
+        engine = create_engine(connection_url)
+        try:
+            src_connpos = engine.connect()
+            print("na henaaaa felll dest")
+            print(f"Data from {df}:\n")
+            
+            df.to_sql(name=tbl, con=src_connpos, if_exists="append", index=False)
+            print('done')
+            df_r = pd.read_sql_query(f"SELECT * FROM {tbl}", src_connpos)
+            print(f"Data from {tbl}:\n", df_r)
+
+        except Exception as e:
+            raise Exception(f"Connection failed: {str(e)}")
+
+        
+    except Exception as e:
+        print("Data load error: " + str(e))
 
 
 try:
