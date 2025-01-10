@@ -21,15 +21,6 @@ category_dim = category.merge(sub_category, on='category_id', how='inner')
 customer_dim = customer
 product_dim = product.drop(columns=['sub_category_id'])
 
-
-
-
-
-
-
-
-    
-
-
-
-
+print(product_dim)
+print(promotion)
+print(promotion_product)
