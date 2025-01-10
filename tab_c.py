@@ -13,4 +13,15 @@ dwh = dict(
     promotion_dim=pd.DataFrame(columns=['promotion_id', 'promotion_name'])
     )
 
-print(dwh['sales_fact'])
+db = dict(
+    transaction = pd.DataFrame(columns=['transact_id', 'customer_id', 'product_id', 'sales_discount','sales_amount', 'quantity', 'date', 'time']),
+    customer = pd.DataFrame(columns=['customer_id', 'name', 'age', 'gender', 'email', 'phone', 'martital_status', 'has_children']),
+    promotion = pd.DataFrame(columns=['promotion_id', 'promotion_name', 'start_date', 'end_date']),
+    promotion_product = pd.DataFrame(columns=['promotion_id', 'product_id', 'discount', 'start_date', 'end_date']),
+    product = pd.DataFrame(columns=['product_id', 'product_name', 'price', 'sub_category_id']),
+    sub_category = pd.DataFrame(columns=['sub_category_id', 'sub_category_name', 'category_id']),
+    category = pd.DataFrame(columns=['category_id', 'category_name']),
+    state= pd.DataFrame(columns=['state_id', 'state_name']),
+    branch = pd.DataFrame(columns=['branch_id', 'branch_area', 'city_id', 'state_id']),
+    city = pd.DataFrame(columns=['city_id', 'city_name', 'state_id']),
+    casher = pd.DataFrame(columns=['casher_id', 'name', 'age', 'gender', 'email', 'phone', 'salary', 'hire_date', 'branch_id']))
