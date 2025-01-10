@@ -51,6 +51,12 @@ def load(df, tbl, trgt_dict):
 
     except Exception as e:
         print(f"Connection Failed: {str(e)}")
-        
-tbl = 'products'
-load(extract(tbl, src_dict), tbl, trgt_dict)
+
+# tbl = 'products'
+# load(extract(tbl, src_dict), tbl, trgt_dict)
+for tbl in extract_table_names(schema_name, src_dict):
+    df = extract(tbl, src_dict)
+    ###transform func 
+    ###then use t_df in the load func
+    load(df, tbl, trgt_dict)
+    print(f'{tbl} loaded successfully')
