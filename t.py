@@ -15,12 +15,14 @@ city = db['city']
 casher = db['casher']
 
 def get_date_features(df, date):
+    day_of_week_dict = {0: 'Mon', 1: 'Tue', 2: 'Wed', 3: 'Thu', 4: 'Fri', 5: 'Sat', 6: 'Sun'}
     df_date = df
     try:
         df_date['month'] = df_date[date].dt.month
         df_date['year'] = df_date[date].dt.year
 
         df_date['day_of_week'] = df_date[date].dt.dayofweek
+        df_date['day_of_week'] = df_date['day_of_week'].map(day_of_week_dict)
         df_date['day_of_month'] = df_date[date].dt.day
         df_date['day_of_year'] = df_date[date].dt.dayofyear
 
