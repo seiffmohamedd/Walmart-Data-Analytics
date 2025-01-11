@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 import pandas as pd
-from variables import *
+from env_variables import *
 
 def extract_table_names(schema, src_dict):
     try:
@@ -59,3 +59,4 @@ for tbl in extract_table_names(schema_name, src_dict):
     df_dict[tbl] = df
 # load(df, tbl, trgt_dict)
 # print(f'{tbl} loaded successfully')
+
