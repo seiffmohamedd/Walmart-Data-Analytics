@@ -54,9 +54,9 @@ def load(df, tbl, trgt_dict):
 
 # tbl = 'products'
 # load(extract(tbl, src_dict), tbl, trgt_dict)
+df_dict={}
 for tbl in extract_table_names(schema_name, src_dict):
     df = extract(tbl, src_dict)
-    ###transform func 
-    ###then use t_df in the load func
-    load(df, tbl, trgt_dict)
-    print(f'{tbl} loaded successfully')
+    df_dict[tbl] = df
+# load(df, tbl, trgt_dict)
+# print(f'{tbl} loaded successfully')
