@@ -3,7 +3,7 @@ pwd = '123',
 uid = 'root',    
 host = "localhost",
 port = 3306, 
-database = "mart")
+database = "w_mart")
 
 trgt_dict = dict(
 uid2="otifi",
@@ -12,4 +12,4 @@ host2 = "localhost",
 port2 = 5432,  
 database2 = "porj")
 
-schema_name = 'Mart'
+schema_name = 'w_mart'
