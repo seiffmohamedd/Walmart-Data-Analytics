@@ -43,7 +43,7 @@ def load(df, tbl, trgt_dict):
         try:
             src_conn = engine.connect()
             print("Connection Established")
-            # df.to_sql(name=tbl, con=src_conn, if_exists="append", index=False)
+            df.to_sql(name=tbl, con=src_conn, if_exists="append", index=False)
             print('Data Loaded')
 
         except Exception as e:
