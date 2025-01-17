@@ -43,7 +43,7 @@ def load(df, tbl, trgt_dict):
         try:
             src_conn = engine.connect()
             print("Connection Established")
-            df.to_sql(name=tbl, con=src_conn, if_exists="append", index=False)
+            # df.to_sql(name=tbl, con=src_conn, if_exists="append", index=False)
             print('Data Loaded')
 
         except Exception as e:
@@ -52,14 +52,15 @@ def load(df, tbl, trgt_dict):
     except Exception as e:
         print(f"Connection Failed: {str(e)}")
 
-print(extract_table_names(schema_name, src_dict))
-df_dict={}
-for tbl in extract_table_names(schema_name, src_dict):
-    df = extract(tbl, src_dict)
-    df_dict[tbl] = df
-    print(f'{tbl} loaded successfully')
+# print(extract_table_names(schema_name, src_dict))
+# df_dict={}
+# for tbl in extract_table_names(schema_name, src_dict):
+#     df = extract(tbl, src_dict)
+#     df_dict[tbl] = df
+#     print(f'{tbl} loaded successfully')
 # load(df, tbl, trgt_dict)
 
-print(df_dict)
+# print(df_dict)
+#load(0, 0, trgt_dict)
 
 

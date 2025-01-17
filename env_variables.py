@@ -10,6 +10,6 @@ uid2="otifi",
 pwd2="123",
 host2 = "localhost",
 port2 = 5432,  
-database2 = "porj")
+database2 = "wmart_dwh")
 
 schema_name = 'w_mart'
