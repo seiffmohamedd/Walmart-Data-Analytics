@@ -55,11 +55,13 @@ date_dim['date'] = date_dim['date'].dt.strftime('%Y-%m-%d')
 df_id = pd.DataFrame(1, index=[0], columns=['casher_id', 'branch_id', 'category_sub_id', 'product_id', 'promotion_id', 'customer_id'])
 df_id.to_csv('log/id.csv', index=False)
 
-product_dim = product.merge(sub_category, on='sub_category_id', how='inner').merge(category, on='category_id', how='inner').drop_duplicates().rename(columns={'index': 'category_sub_id'})
+product_dim = product.merge(sub_category, on='sub_category_id', how='inner').merge(category, on=
+'category_id', how='inner').drop_duplicates().rename(columns={'index': 'category_sub_id'})
 category_dim = product_dim.drop(columns=['product_name', 'price', 'product_id']).drop_duplicates().reset_index().rename(columns={'index': 'category_sub_id'})
 category_dim['category_sub_id_k'] = category_dim['category_sub_id'] + df_id['category_sub_id'][0]
 
-product_dim = product_dim.merge(category_dim, on=['category_id', 'sub_category_id'], how='inner').drop(columns=['sub_name_y', 'category_name_y','sub_name_x','category_name_x']).reset_index().rename(columns={'index': 'product_id_k'})
+product_dim = product_dim.merge(category_dim, on=['category_id', 'sub_category_id'], how='inner').drop(columns=
+['sub_name_y', 'category_name_y','sub_name_x','category_name_x']).reset_index().rename(columns={'index': 'product_id_k'})
 product_dim['product_id_k'] = product_dim['product_id_k'] + df_id['product_id'][0]
 customer_dim = customer.reset_index().rename(columns={'index': 'customer_id_k'})
 customer_dim['customer_id_k'] = customer_dim['customer_id_k'] + df_id['customer_id'][0]
