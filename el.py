@@ -6,13 +6,12 @@ def extract_table_names(schema, src_dict):
     try:
         connection_url = f"mysql+pymysql://{src_dict['uid']}:{src_dict['pwd']}@{src_dict['host']}:{src_dict['port']}/{src_dict['database']}"
         engine = create_engine(connection_url)
+        src_conn = engine.connect()
+        print('Connection Established')
         try:
-            src_conn = engine.connect()
-            print('Connection Established')
             df_r = pd.read_sql_query(f"SELECT TABLE_NAME AS table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{schema}';", src_conn)
             print('Data Extracted')
             return list(df_r['table_name'])
-
         except Exception as e:
             raise Exception(f"Table Names Extraction Error: {str(e)}")
     except Exception as e:
@@ -34,7 +33,6 @@ def extract(tbl, src_dict):
 
     except Exception as e:
         print(f"Connection Failed: {str(e)}")
-
 
 def load(df, tbl, trgt_dict):
     try:
