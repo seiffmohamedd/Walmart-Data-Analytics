@@ -14,18 +14,6 @@ branch = db['branch']
 city = db['city']
 casher = db['cashier']
 
-###columns
-# transaction: ['transaction_id', 'customer_id', 'product_id', 'cashier_id', 'date','time', 'quantity', 'sales_amount']
-# customer: ['customer_id', 'customer_name', 'age', 'gender', 'phone', 'email','marital_status', 'has_children']
-# promotion: ['promotion_id', 'promotion_name']
-# promotion_product: ['product_id', 'promotion_id', 'start_date', 'end_date', 'discount']
-# product: ['product_id', 'product_name', 'price', 'sub_category_id']
-# sub_category: ['sub_category_id', 'sub_name', 'category_id']
-# category: ['category_id', 'category_name']
-# state: ['state_id', 'state_name']
-# branch: ['branch_id', 'branch_name', 'area', 'city_id']
-# city: ['city_id', 'city_name', 'state_id']
-# casher: ['cashier_id', 'cashier_name', 'age', 'phone', 'gender', 'hire_date','salary', 'branch_id'],
 
 def create_date_dim(df, date):
     day_of_week_dict = {0: 'Mon', 1: 'Tue', 2: 'Wed', 3: 'Thu', 4: 'Fri', 5: 'Sat', 6: 'Sun'}
@@ -34,7 +22,6 @@ def create_date_dim(df, date):
     last_days = ["31-01", "28-02", "31-03", "30-04", "31-05", "30-06", "31-07", "31-08", "30-09", "31-10", "30-11", "31-12"]
     df_date = df
     try:
-        #name of month ++ nummber of month ,  ++ weekday indecator, list of holdays
         df_date['day_of_week'] = df_date[date].dt.dayofweek
         df_date['day_of_week'] = df_date['day_of_week'].map(day_of_week_dict)
         df_date['day_of_month'] = df_date[date].dt.day
@@ -91,21 +78,15 @@ promotion_dim = promotion_dim.merge(promotion_product, on='promotion_id', how='i
 product_dim = product_dim.merge(promotion_product, on='product_id', how='left').merge(promotion_dim, on='promotion_id', how='left')
 promotion_dim = promotion_dim.drop(columns='product_id')
 promotion_dim[['start_date','end_date']] = promotion_dim[['start_date','end_date']].map(lambda x: str(x)[:7])
-product_dim = product_dim.iloc[:,:12].rename(columns={'product_id_x':'product_id'}).drop(columns=
+product_dim = product_dim.iloc[:,:13].rename(columns={'product_id_x':'product_id'}).drop(columns=
 ['category_sub_id','start_date_x','end_date_x','discount_x','promotion_id'])
 
 
-print(product_dim)
-print(promotion_dim)
-print(category_dim)
-print(date_dim)
-print(product_dim)
-print(customer_dim)
-print(branch_dim)   
-print(casher_dim)
-print(transaction)
-
-# sales_fact = transaction.merge()
+sales_fact = transaction.merge(product_dim[['product_id', 'product_id_k', 'category_sub_id_k', 'promotion_id_k']], on=
+'product_id', how='inner').drop(columns='product_id').merge(customer_dim[['customer_id_k', 'customer_id']], on=
+'customer_id', how='inner').drop(columns='customer_id').merge(casher_dim[['casher_id_k', 'cashier_id', 'branch_id_k']], on=
+'cashier_id', how='inner').drop(columns='cashier_id')
+product_dim = product_dim.drop(columns=['sub_category_id','category_id'])
 
 
 
