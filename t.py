@@ -1,11 +1,18 @@
 import pandas as pd 
-from tab_c import db
+from el import *
 
+for tbl in extract_table_names(schema_name, src_dict):
+    df = extract(tbl, src_dict)
+    df_dict[tbl] = df
+    # print(f'{tbl} loaded successfully')
 
-transaction = db['transaction']
+db = df_dict.copy()
+print(db.keys())
+
+transaction = db['transactions']
 customer = db['customer']
 promotion = db['promotion'] 
-promotion_product = db['promotion_product']
+promotion_product = db['product_promotion']
 product = db['product']
 sub_category = db['sub_category']
 category = db['category']
@@ -52,8 +59,7 @@ date_dim = create_date_dim(date_dim, 'date')
 date_dim['date'] = date_dim['date'].dt.strftime('%Y-%m-%d')
 
 
-df_id = pd.DataFrame(1, index=[0], columns=['casher_id', 'branch_id', 'category_sub_id', 'product_id', 'promotion_id', 'customer_id'])
-df_id.to_csv('log/id.csv', index=False)
+
 
 product_dim = product.merge(sub_category, on='sub_category_id', how='inner').merge(category, on=
 'category_id', how='inner').drop_duplicates().rename(columns={'index': 'category_sub_id'})
@@ -89,6 +95,5 @@ sales_fact = transaction.merge(product_dim[['product_id', 'product_id_k', 'categ
 'customer_id', how='inner').drop(columns='customer_id').merge(casher_dim[['casher_id_k', 'cashier_id', 'branch_id_k']], on=
 'cashier_id', how='inner').drop(columns='cashier_id')
 product_dim = product_dim.drop(columns=['sub_category_id','category_id'])
-
 
 

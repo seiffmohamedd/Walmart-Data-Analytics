@@ -23,9 +23,9 @@ def extract(tbl, src_dict):
         engine = create_engine(connection_url)
         try:
             src_conn = engine.connect()
-            print('Connection Established')
+            # print('Connection Established')
             df_r = pd.read_sql_query(f"SELECT * FROM {tbl}", src_conn)
-            print('Data Extracted')
+            # print('Data Extracted')
             return df_r
 
         except Exception as e:
@@ -50,15 +50,15 @@ def load(df, tbl, trgt_dict):
     except Exception as e:
         print(f"Connection Failed: {str(e)}")
 
-# print(extract_table_names(schema_name, src_dict))
-# df_dict={}
-# for tbl in extract_table_names(schema_name, src_dict):
-#     df = extract(tbl, src_dict)
-#     df_dict[tbl] = df
-#     print(f'{tbl} loaded successfully')
+
+df_dict={}
+
+df_id = pd.read_csv('E:/ITI 9 Months/Data Analytics/proj_2/Walmart-Data-Analytics/log/id.csv')
+
 # load(df, tbl, trgt_dict)
 
 # print(df_dict)
 #load(0, 0, trgt_dict)
+
 
 
