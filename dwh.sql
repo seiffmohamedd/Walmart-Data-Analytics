@@ -1,79 +1,72 @@
-CREATE TABLE CUSTOMER_DIM (
-    CUSTOMER_ID INT PRIMARY KEY,
-    NAME VARCHAR(100),
-    AGE INT,
-    GENDER CHAR(1),
-    PHONE VARCHAR(15),
-    EMAIL VARCHAR(100),
-    MARITAL_STATUS VARCHAR(20),
-    HAS_CHILDREN BOOLEAN
+CREATE TABLE date_dim (
+    date_id INT PRIMARY KEY,
+    date DATE NOT NULL,
+    day_of_week VARCHAR(3),
+    day_of_month INT,
+    day_of_year INT,
+    last_day_in_month_indicator INT,
+    week_of_year INT,
+    month INT,
+    month_name VARCHAR(3),
+    quarter INT,
+    year INT,
+    holiday_indicator INT,
+    weekday_indicator INT
 );
-CREATE TABLE PRODUCT_DIM (
-    PRODUCT_ID INT PRIMARY KEY,
-    PRODUCT_NAME VARCHAR(100),
-    PRICE DECIMAL(10, 2)
+
+CREATE TABLE category_dim (
+    category_sub_id INT,
+    category_sub_id_bk INT,
+    category_id INT,
+    category_name VARCHAR(255),
+    sub_category_id INT,
+    sub_name VARCHAR(255)
 );
-CREATE TABLE PROMOTION_DIM (
-    PROMOTION_ID INT PRIMARY KEY,
-    PROMOTION_NAME VARCHAR(100),
-    START_DATE DATE,
-    END_DATE DATE,
-    DISCOUNT DECIMAL(5, 2)
+
+CREATE TABLE product_dim (
+    product_id INT,
+    product_id_bk INT,
+    product_name VARCHAR(255),
+    price DECIMAL(10, 2),
+    category_id INT,
+    sub_category_id INT,
+    category_sub_id_bk INT,
+    promotion_id_bk INT
 );
-CREATE TABLE CASHIER_DIM (
-    CASHIER_ID INT PRIMARY KEY,
-    NAME VARCHAR(100),
-    AGE INT,
-    GENDER CHAR(1),
-    PHONE VARCHAR(15),
-    SALARY DECIMAL(10, 2),
-    HIRE_DATE DATE
+CREATE TABLE customer_dim (
+    customer_id INT,
+    customer_id_bk INT,
+    customer_name VARCHAR(255),
+    age INT,                   
+    gender VARCHAR(10),        
+    phone VARCHAR(15),        
+    email VARCHAR(255),        
+    marital_status VARCHAR(20),
+    has_children INT      
 );
-CREATE TABLE BRANCH_DIM (
-    BRANCH_ID INT PRIMARY KEY,
-    BRANCH_NAME VARCHAR(100),
-    BRANCH_AREA VARCHAR(100),
-    CITY_NAME VARCHAR(100),
-    STATE_NAME VARCHAR(100)
+CREATE TABLE branch_dim (
+    branch_id INT,
+	branch_id_bk INT,
+    branch_name VARCHAR(255),
+    city_id INT,
+    city_name VARCHAR(255),
+    state_id INT,
+    state_name VARCHAR(255),
+    area VARCHAR(255)
 );
-CREATE TABLE CATEGORY_DIM (
-    CATEGORY_ID INT PRIMARY KEY,
-    SUB_ID INT,
-    CATEGORY_NAME VARCHAR(100),
-    SUB_CATEGORY_NAME VARCHAR(100)
+CREATE TABLE cashier_dim (
+    cashier_id INT,
+	cashier_id_bk INT,
+    
+    cashier_name VARCHAR(255),
+    branch_id_bk INT
 );
-CREATE TABLE DATE_DIM (
-    DATE_ID INT PRIMARY KEY,
-    DATE DATE,
-    DAY_OF_WEEK VARCHAR(20),
-    DAY_OF_MONTH INT,
-    DAY_OF_YEAR INT,
-    LAST_DAY_IN_MONTH_FLAG BOOLEAN,
-    WEEK_NUMBER_IN_YEAR INT,
-    MONTH_NAME VARCHAR(20),
-    MONTH_NUMBER INT,
-    QUARTER VARCHAR(10),
-    YEAR INT,
-    HOLIDAY_INDICATOR BOOLEAN,
-    WEEKDAY_INDICATOR BOOLEAN
-);
-CREATE TABLE SALES_FACT (
-    TRANSACTION_ID INT PRIMARY KEY,
-    CUSTOMER_ID INT,
-    PRODUCT_ID INT,
-    CASHIER_ID INT,
-    BRANCH_ID INT,
-    DATE_ID INT,
-    PROMOTION_ID INT,
-    CATEGORY_ID INT,
-    QUANTITY INT,
-    SALES_AMOUNT DECIMAL(10, 2),
-    TIME TIME,
-    FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMER_DIM(CUSTOMER_ID),
-    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT_DIM(PRODUCT_ID),
-    FOREIGN KEY (CASHIER_ID) REFERENCES CASHIER_DIM(CASHIER_ID),
-    FOREIGN KEY (BRANCH_ID) REFERENCES BRANCH_DIM(BRANCH_ID),
-    FOREIGN KEY (DATE_ID) REFERENCES DATE_DIM(DATE_ID),
-    FOREIGN KEY (PROMOTION_ID) REFERENCES PROMOTION_DIM(PROMOTION_ID),
-    FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY_DIM(CATEGORY_ID)
+CREATE TABLE promotion_dim (
+    promotion_id INT,
+	promotion_id_bk INT,
+    
+    promotion_name VARCHAR(255),
+    start_date VARCHAR(7),
+    end_date VARCHAR(7),
+    discount DECIMAL(5, 2)
 );

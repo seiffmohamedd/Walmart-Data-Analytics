@@ -18,7 +18,7 @@ category = db['category']
 state = db['state']
 branch = db['branch']
 city = db['city']
-casher = db['cashier']
+cashier = db['cashier']
 
 
 def create_date_dim(df, date):
@@ -32,7 +32,7 @@ def create_date_dim(df, date):
         df_date['day_of_week'] = df_date['day_of_week'].map(day_of_week_dict)
         df_date['day_of_month'] = df_date[date].dt.day
         df_date['day_of_year'] = df_date[date].dt.dayofyear
-        df_date['last_day_in_month_indecator'] = df_date[date].dt.strftime('%m-%d').apply(lambda x: 1 if x in last_days else 0)
+        df_date['last_day_in_month_indicator'] = df_date[date].dt.strftime('%m-%d').apply(lambda x: 1 if x in last_days else 0)
 
         df_date['week_of_year'] = df_date[date].dt.isocalendar().week
         df_date['week_of_year'] = df_date['week_of_year'].astype(int)
@@ -73,9 +73,9 @@ customer_dim['customer_id_bk'] = customer_dim['customer_id_bk'] + df_id['custome
 
 branch_dim = branch.merge(city, on='city_id', how='inner').merge(state, on='state_id', how='inner').reset_index().rename(columns={'index': 'branch_id_bk'})
 branch_dim['branch_id_bk'] = branch_dim['branch_id_bk'] + df_id['branch_id'][0]
-casher_dim = casher.merge(branch_dim, on='branch_id', how='inner').drop(columns=
-['branch_id','city_id','city_name','state_id','state_name','area','branch_name','branch_id']).reset_index().rename(columns={'index': 'casher_id_bk'})
-casher_dim['casher_id_bk'] = casher_dim['casher_id_bk'] + df_id['casher_id'][0]
+cashier_dim = cashier.merge(branch_dim, on='branch_id', how='inner').drop(columns=
+['branch_id','city_id','city_name','state_id','state_name','area','branch_name','branch_id']).reset_index().rename(columns={'index': 'cashier_id_bk'})
+cashier_dim['cashier_id_bk'] = cashier_dim['cashier_id_bk'] + df_id['cashier_id'][0]
 
 
 
@@ -91,11 +91,21 @@ product_dim = product_dim.iloc[:,:13].rename(columns={'product_id_x':'product_id
 
 sales_fact = transaction.merge(product_dim[['product_id', 'product_id_bk', 'category_sub_id_bk', 'promotion_id_bk']], on=
 'product_id', how='inner').drop(columns='product_id').merge(customer_dim[['customer_id_bk', 'customer_id']], on=
-'customer_id', how='inner').drop(columns='customer_id').merge(casher_dim[['casher_id_bk', 'cashier_id', 'branch_id_bk']], on=
+'customer_id', how='inner').drop(columns='customer_id').merge(cashier_dim[['cashier_id_bk', 'cashier_id', 'branch_id_bk']], on=
 'cashier_id', how='inner').drop(columns='cashier_id')
-# .merge(date_dim[['date_id', 'date']], on='date', how='left').drop(columns='date')
+sales_fact['date'] = pd.to_datetime(sales_fact['date'])
+sales_fact['date'] = sales_fact['date'].dt.strftime('%Y-%m-%d')
+sales_fact = sales_fact.merge(date_dim[['date_id', 'date']], on='date', how='left').drop(columns='date')
+sales_fact['time'] = sales_fact['time'].dt.components['hours']
+sales_fact['time'] = sales_fact['time'].astype(int)
 product_dim = product_dim.drop(columns=['sub_category_id','category_id','category_sub_id_bk','promotion_id_bk'])
+cashier_dim = cashier_dim.drop(columns=['branch_id_bk'])
 
 
-# print(sales_fact)
-# print(date_dim)
+# load(date_dim, 'date_dim', trgt_dict)
+# load(product_dim, 'product_dim', trgt_dict)
+# load(customer_dim, 'customer_dim', trgt_dict)
+# load(branch_dim, 'branch_dim', trgt_dict)
+# load(cashier_dim, 'cashier_dim', trgt_dict)
+# load(promotion_dim, 'promotion_dim', trgt_dict)
+# load(sales_fact, 'sales_fact', trgt_dict)
