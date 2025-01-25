@@ -53,7 +53,7 @@ def load(df, tbl, trgt_dict):
 
 df_dict={}
 
-df_id = pd.read_csv('E:/ITI 9 Months/Data Analytics/proj_2/Walmart-Data-Analytics/log/id.csv')
+df_id = pd.read_csv('./log/id.csv')
 
 # load(df, tbl, trgt_dict)
 

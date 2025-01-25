@@ -4,10 +4,9 @@ from el import *
 for tbl in extract_table_names(schema_name, src_dict):
     df = extract(tbl, src_dict)
     df_dict[tbl] = df
-    # print(f'{tbl} loaded successfully')
 
 db = df_dict.copy()
-print(db.keys())
+
 
 transaction = db['transactions']
 customer = db['customer']
@@ -57,31 +56,31 @@ date_dim.set_index('date', inplace=True)
 date_dim = date_dim.resample('D').sum(numeric_only=True).sort_values(by='date').reset_index()
 date_dim = create_date_dim(date_dim, 'date')
 date_dim['date'] = date_dim['date'].dt.strftime('%Y-%m-%d')
-
-
+date_dim = date_dim.reset_index().rename(columns={'index': 'date_id'})
+date_dim['date_id'] = date_dim['date_id'] + df_id['date_id'][0]
 
 
 product_dim = product.merge(sub_category, on='sub_category_id', how='inner').merge(category, on=
 'category_id', how='inner').drop_duplicates().rename(columns={'index': 'category_sub_id'})
 category_dim = product_dim.drop(columns=['product_name', 'price', 'product_id']).drop_duplicates().reset_index().rename(columns={'index': 'category_sub_id'})
-category_dim['category_sub_id_k'] = category_dim['category_sub_id'] + df_id['category_sub_id'][0]
+category_dim['category_sub_id_bk'] = category_dim['category_sub_id'] + df_id['category_sub_id'][0]
 
 product_dim = product_dim.merge(category_dim, on=['category_id', 'sub_category_id'], how='inner').drop(columns=
-['sub_name_y', 'category_name_y','sub_name_x','category_name_x']).reset_index().rename(columns={'index': 'product_id_k'})
-product_dim['product_id_k'] = product_dim['product_id_k'] + df_id['product_id'][0]
-customer_dim = customer.reset_index().rename(columns={'index': 'customer_id_k'})
-customer_dim['customer_id_k'] = customer_dim['customer_id_k'] + df_id['customer_id'][0]
+['sub_name_y', 'category_name_y','sub_name_x','category_name_x']).reset_index().rename(columns={'index': 'product_id_bk'})
+product_dim['product_id_bk'] = product_dim['product_id_bk'] + df_id['product_id'][0]
+customer_dim = customer.reset_index().rename(columns={'index': 'customer_id_bk'})
+customer_dim['customer_id_bk'] = customer_dim['customer_id_bk'] + df_id['customer_id'][0]
 
-branch_dim = branch.merge(city, on='city_id', how='inner').merge(state, on='state_id', how='inner').reset_index().rename(columns={'index': 'branch_id_k'})
-branch_dim['branch_id_k'] = branch_dim['branch_id_k'] + df_id['branch_id'][0]
+branch_dim = branch.merge(city, on='city_id', how='inner').merge(state, on='state_id', how='inner').reset_index().rename(columns={'index': 'branch_id_bk'})
+branch_dim['branch_id_bk'] = branch_dim['branch_id_bk'] + df_id['branch_id'][0]
 casher_dim = casher.merge(branch_dim, on='branch_id', how='inner').drop(columns=
-['branch_id','city_id','city_name','state_id','state_name','area','branch_name','branch_id']).reset_index().rename(columns={'index': 'casher_id_k'})
-casher_dim['casher_id_k'] = casher_dim['casher_id_k'] + df_id['casher_id'][0]
+['branch_id','city_id','city_name','state_id','state_name','area','branch_name','branch_id']).reset_index().rename(columns={'index': 'casher_id_bk'})
+casher_dim['casher_id_bk'] = casher_dim['casher_id_bk'] + df_id['casher_id'][0]
 
 
 
-promotion_dim = promotion.reset_index().rename(columns={'index': 'promotion_id_k'})
-promotion_dim['promotion_id_k'] = promotion_dim['promotion_id_k'] + df_id['promotion_id'][0]
+promotion_dim = promotion.reset_index().rename(columns={'index': 'promotion_id_bk'})
+promotion_dim['promotion_id_bk'] = promotion_dim['promotion_id_bk'] + df_id['promotion_id'][0]
 promotion_dim = promotion_dim.merge(promotion_product, on='promotion_id', how='inner')
 product_dim = product_dim.merge(promotion_product, on='product_id', how='left').merge(promotion_dim, on='promotion_id', how='left')
 promotion_dim = promotion_dim.drop(columns='product_id')
@@ -90,10 +89,13 @@ product_dim = product_dim.iloc[:,:13].rename(columns={'product_id_x':'product_id
 ['category_sub_id','start_date_x','end_date_x','discount_x','promotion_id'])
 
 
-sales_fact = transaction.merge(product_dim[['product_id', 'product_id_k', 'category_sub_id_k', 'promotion_id_k']], on=
-'product_id', how='inner').drop(columns='product_id').merge(customer_dim[['customer_id_k', 'customer_id']], on=
-'customer_id', how='inner').drop(columns='customer_id').merge(casher_dim[['casher_id_k', 'cashier_id', 'branch_id_k']], on=
+sales_fact = transaction.merge(product_dim[['product_id', 'product_id_bk', 'category_sub_id_bk', 'promotion_id_bk']], on=
+'product_id', how='inner').drop(columns='product_id').merge(customer_dim[['customer_id_bk', 'customer_id']], on=
+'customer_id', how='inner').drop(columns='customer_id').merge(casher_dim[['casher_id_bk', 'cashier_id', 'branch_id_bk']], on=
 'cashier_id', how='inner').drop(columns='cashier_id')
-product_dim = product_dim.drop(columns=['sub_category_id','category_id'])
+# .merge(date_dim[['date_id', 'date']], on='date', how='left').drop(columns='date')
+product_dim = product_dim.drop(columns=['sub_category_id','category_id','category_sub_id_bk','promotion_id_bk'])
 
 
+# print(sales_fact)
+# print(date_dim)

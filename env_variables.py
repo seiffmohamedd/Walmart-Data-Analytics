@@ -1,5 +1,5 @@
 src_dict =dict(
-pwd = 'seif',  
+pwd = '123',  
 uid = 'root',    
 host = "localhost",
 port = 3306, 
