@@ -319,11 +319,7 @@ VALUES
 (25, 10, 1, 18.99, 14, 14, NULL, 5, 1, 1, 75),
 (26, 13, 1, 9.99, 16, 16, NULL, 6, 2, 2, 77),
 (27, 15, 1, 34.99, 18, 18, NULL, 7, 3, 3, 80),
-(28, 18, 1, 49.99, 20, 20, NULL, 8, 4, 4, 85);
-
-
-INSERT INTO sales_fact (transaction_id, time, quantity, sales_amount, product_id_bk, category_sub_id_bk, promotion_id_bk, customer_id_bk, cashier_id_bk, branch_id_bk, date_id)
-VALUES
+(28, 18, 1, 49.99, 20, 20, NULL, 8, 4, 4, 85),
 -- Additional records (generated based on previous data)
 (29, 10, 1, 899.99, 1, 1, 1.0, 2, 2, 2, 1),
 (30, 14, 1, 764.99, 2, 1, 1.0, 3, 3, 3, 3),
@@ -352,8 +348,11 @@ VALUES
 (53, 10, 1, 18.99, 14, 14, NULL, 2, 2, 2, 75),
 (54, 13, 1, 9.99, 16, 16, NULL, 3, 3, 3, 77),
 (55, 15, 1, 34.99, 18, 18, NULL, 4, 4, 4, 80),
-(56, 18, 1, 49.99, 20, 20, NULL, 1, 1, 1, 85),
+(56, 18, 1, 49.99, 20, 20, NULL, 1, 1, 1, 85);
 
+
+INSERT INTO sales_fact (transaction_id, time, quantity, sales_amount, product_id_bk, category_sub_id_bk, promotion_id_bk, customer_id_bk, cashier_id_bk, branch_id_bk, date_id)
+VALUES
 -- Transaction 1: 7 products purchased together
 (1, 10, 1, 899.99, 1, 1, 1.0, 1, 1, 1, 1),
 (1, 10, 1, 899.99, 2, 1, 1.0, 1, 1, 1, 1),
