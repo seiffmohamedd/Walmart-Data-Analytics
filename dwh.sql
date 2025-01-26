@@ -129,6 +129,26 @@ VALUES
 (7, 7, 'Emma Brown', 29, 'Female', '555-666-7777', 'emma.brown@example.com', 'Single', 0),
 (8, 8, 'Michael Davis', 50, 'Male', '444-555-6666', 'michael.davis@example.com', 'Married', 1);
 
+-- Insert into category_dim
+INSERT INTO category_dim (category_sub_id, sub_category_id, sub_name, category_id, category_name, category_sub_id_bk)
+VALUES
+(0, 1, 'Smartphones', 1, 'Electronics', 1),
+(2, 2, 'Laptops', 1, 'Electronics', 3),
+(4, 3, 'Men''s Clothing', 2, 'Clothing', 5),
+(6, 4, 'Women''s Clothing', 2, 'Clothing', 7),
+(8, 5, 'Cookware', 3, 'Home & Kitchen', 9),
+(9, 6, 'Furniture', 3, 'Home & Kitchen', 10),
+(10, 7, 'Fitness Equipment', 4, 'Sports & Outdoors', 11),
+(11, 8, 'Camping Gear', 4, 'Sports & Outdoors', 12),
+(12, 9, 'Fiction', 5, 'Books', 13),
+(13, 10, 'Non-Fiction', 5, 'Books', 14),
+(14, 11, 'Board Games', 6, 'Toys & Games', 15),
+(15, 12, 'Outdoor Toys', 6, 'Toys & Games', 16),
+(16, 13, 'Skincare', 7, 'Beauty & Personal Care', 17),
+(17, 14, 'Makeup', 7, 'Beauty & Personal Care', 18),
+(18, 15, 'Car Accessories', 8, 'Automotive', 19),
+(19, 16, 'Tools & Equipment', 8, 'Automotive', 20);
+
 -- Insert into date_dim
 INSERT INTO date_dim (date_id, date, day_of_week, day_of_month, day_of_year, last_day_in_month_indicator, week_of_year, month, month_name, quarter, year, holiday_indicator, weekday_indicator)
 VALUES
