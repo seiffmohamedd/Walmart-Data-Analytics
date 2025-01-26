@@ -1,6 +1,32 @@
--- Date Dimension Table
-CREATE TABLE date_dim (
-    date_id_sk INT,                      -- Surrogate Key
+-- Table: category_dim
+
+CREATE TABLE IF NOT EXISTS category_dim (
+    category_sub_id INT,
+    category_sub_id_bk INT,
+    category_id INT,
+    category_name VARCHAR(255),
+    sub_category_id INT,
+    sub_name VARCHAR(255)
+);
+
+-- Table: customer_dim
+
+CREATE TABLE IF NOT EXISTS customer_dim (
+    customer_id INT,
+    customer_id_bk INT,
+    customer_name VARCHAR(255),
+    age INT,
+    gender VARCHAR(10),
+    phone VARCHAR(15),
+    email VARCHAR(255),
+    marital_status VARCHAR(20),
+    has_children INT
+);
+
+-- Table: date_dim
+
+CREATE TABLE IF NOT EXISTS date_dim (
+    date_id INT NOT NULL PRIMARY KEY,
     date DATE NOT NULL,
     day_of_week VARCHAR(3),
     day_of_month INT,
@@ -15,86 +41,42 @@ CREATE TABLE date_dim (
     weekday_indicator INT
 );
 
--- Category Dimension Table
-CREATE TABLE category_dim (
-    category_sub_id_sk INT,              -- Surrogate Key
-    category_sub_id_bk INT,              -- Business Key
-    category_id INT,
-    category_name VARCHAR(255),
-    sub_category_id INT,
-    sub_name VARCHAR(255)
-);
+-- Table: product_dim
 
--- Product Dimension Table
-CREATE TABLE product_dim (
-    product_id_sk INT,                   -- Surrogate Key
-    product_id_bk INT,                   -- Business Key
+CREATE TABLE IF NOT EXISTS product_dim (
+    product_id INT,
+    product_id_bk INT,
     product_name VARCHAR(255),
-    price DECIMAL(10, 2),
+    price DECIMAL(10,2),
     category_id INT,
     sub_category_id INT,
-    category_sub_id_sk INT,              -- Foreign Key to category_dim
-    promotion_id_sk INT                  -- Foreign Key to promotion_dim
+    category_sub_id_bk INT,
+    promotion_id_bk INT
 );
 
--- Customer Dimension Table
-CREATE TABLE customer_dim (
-    customer_id_sk INT,                  -- Surrogate Key
-    customer_id_bk INT,                  -- Business Key
-    customer_name VARCHAR(255),
-    age INT,
-    gender VARCHAR(10),
-    phone VARCHAR(15),
-    email VARCHAR(255),
-    marital_status VARCHAR(20),
-    has_children INT
-);
+-- Table: promotion_dim
 
--- Branch Dimension Table
-CREATE TABLE branch_dim (
-    branch_id_sk INT,                    -- Surrogate Key
-    branch_id_bk INT,                    -- Business Key
-    branch_name VARCHAR(255),
-    city_id INT,
-    city_name VARCHAR(255),
-    state_id INT,
-    state_name VARCHAR(255),
-    area VARCHAR(255)
-);
-
--- Cashier Dimension Table
-CREATE TABLE cashier_dim (
-    cashier_id_sk INT,                   -- Surrogate Key
-    cashier_id_bk INT,                   -- Business Key
-    cashier_name VARCHAR(255),
-    age INT,                             -- Added missing column
-    phone VARCHAR(15),                   -- Added missing column
-    gender VARCHAR(10),                  -- Added missing column
-    hire_date DATE,                      -- Added missing column
-    salary DECIMAL(10, 2),               -- Added missing column
-    branch_id_sk INT                     -- Foreign Key to branch_dim
-);
-
--- Promotion Dimension Table
-CREATE TABLE promotion_dim (
-    promotion_id_sk INT,                 -- Surrogate Key
-    promotion_id_bk INT,                 -- Business Key
+CREATE TABLE IF NOT EXISTS promotion_dim (
+    promotion_id INT,
+    promotion_id_bk INT,
     promotion_name VARCHAR(255),
     start_date VARCHAR(7),
     end_date VARCHAR(7),
-    discount DECIMAL(5, 2)
+    discount DECIMAL(5,2)
 );
 
--- Sales Fact Table
-CREATE TABLE sales_fact (
-    sales_id INT,
-    date_id_sk INT,                      -- Foreign Key to date_dim
-    product_id_sk INT,                   -- Foreign Key to product_dim
-    customer_id_sk INT,                  -- Foreign Key to customer_dim
-    cashier_id_sk INT,                   -- Foreign Key to cashier_dim
-    branch_id_sk INT,                    -- Foreign Key to branch_dim
-    promotion_id_sk INT,                 -- Foreign Key to promotion_dim
-    quantity INT,
-    total_amount DECIMAL(10, 2),
-    time INT
+-- Table: sales_fact
+
+CREATE TABLE IF NOT EXISTS sales_fact (
+    transaction_id BIGINT,
+    time BIGINT,
+    quantity BIGINT,
+    sales_amount DOUBLE PRECISION,
+    product_id_bk BIGINT,
+    category_sub_id_bk BIGINT,
+    promotion_id_bk DOUBLE PRECISION,
+    customer_id_bk BIGINT,
+    cashier_id_bk BIGINT,
+    branch_id_bk BIGINT,
+    date_id BIGINT
 );
