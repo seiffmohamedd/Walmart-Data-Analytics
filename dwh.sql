@@ -1,5 +1,4 @@
 -- Table: branch_dim
-
 CREATE TABLE IF NOT EXISTS branch_dim (
     branch_id INT,
     branch_id_bk INT,
@@ -10,9 +9,19 @@ CREATE TABLE IF NOT EXISTS branch_dim (
     state_name VARCHAR(255),
     area VARCHAR(255)
 );
+-- Table: cashier_dim
 
+CREATE TABLE IF NOT EXISTS cashier_dim (
+    cashier_id INT,
+    cashier_id_bk INT,
+    cashier_name VARCHAR(255),
+    age INT,
+    phone VARCHAR(15),
+    gender VARCHAR(10),
+    hire_date DATE,
+    salary DECIMAL(10, 2)
+);
 -- Table: category_dim
-
 CREATE TABLE IF NOT EXISTS category_dim (
     category_sub_id INT,
     category_sub_id_bk INT,
@@ -23,7 +32,6 @@ CREATE TABLE IF NOT EXISTS category_dim (
 );
 
 -- Table: customer_dim
-
 CREATE TABLE IF NOT EXISTS customer_dim (
     customer_id INT,
     customer_id_bk INT,
@@ -37,7 +45,6 @@ CREATE TABLE IF NOT EXISTS customer_dim (
 );
 
 -- Table: date_dim
-
 CREATE TABLE IF NOT EXISTS date_dim (
     date_id INT NOT NULL,
     date DATE NOT NULL,
@@ -55,7 +62,6 @@ CREATE TABLE IF NOT EXISTS date_dim (
 );
 
 -- Table: product_dim
-
 CREATE TABLE IF NOT EXISTS product_dim (
     product_id INT,
     product_id_bk INT,
@@ -68,7 +74,6 @@ CREATE TABLE IF NOT EXISTS product_dim (
 );
 
 -- Table: promotion_dim
-
 CREATE TABLE IF NOT EXISTS promotion_dim (
     promotion_id INT,
     promotion_id_bk INT,
@@ -79,7 +84,6 @@ CREATE TABLE IF NOT EXISTS promotion_dim (
 );
 
 -- Table: sales_fact
-
 CREATE TABLE IF NOT EXISTS sales_fact (
     transaction_id BIGINT,
     time BIGINT,
