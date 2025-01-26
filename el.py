@@ -55,10 +55,6 @@ df_dict={}
 
 df_id = pd.read_csv('./log/id.csv')
 
-# load(df, tbl, trgt_dict)
-
-# print(df_dict)
-#load(0, 0, trgt_dict)
 
 
 

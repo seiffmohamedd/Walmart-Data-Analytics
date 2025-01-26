@@ -1,3 +1,16 @@
+-- Table: branch_dim
+
+CREATE TABLE IF NOT EXISTS branch_dim (
+    branch_id INT,
+    branch_id_bk INT,
+    branch_name VARCHAR(255),
+    city_id INT,
+    city_name VARCHAR(255),
+    state_id INT,
+    state_name VARCHAR(255),
+    area VARCHAR(255)
+);
+
 -- Table: category_dim
 
 CREATE TABLE IF NOT EXISTS category_dim (
@@ -26,7 +39,7 @@ CREATE TABLE IF NOT EXISTS customer_dim (
 -- Table: date_dim
 
 CREATE TABLE IF NOT EXISTS date_dim (
-    date_id INT NOT NULL PRIMARY KEY,
+    date_id INT NOT NULL,
     date DATE NOT NULL,
     day_of_week VARCHAR(3),
     day_of_month INT,
